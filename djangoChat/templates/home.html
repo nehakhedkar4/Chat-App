@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock title %}
+{% block content %} 
+<div class="row justify-content-center">
+    <div class='col-md-6'>
+        <div class="container py-5">
+            <div class="text-center bg-light p-5 rounded">
+                <h2>Django Chat</h2>
+            </div>
+            <p></p>
+            <div class="bg-light p-5 rounded">
+                <div class="mb-3"> 
+                    <form action="checkview" method="post">
+                        {% csrf_token %}
+                        <label for="rm" class="form-label">Room Name</label>
+                        <input type="text" class="form-control" id="rm" name="room">
+                       
+                        <label for="nm" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="nm" name="username"><p></p>
+                        
+                        <button class="btn btn-success">Enter room</button>
+                    </form>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+

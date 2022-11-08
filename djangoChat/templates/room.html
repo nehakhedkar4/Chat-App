@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock title %}
+{% block content %} 
+<div class="row justify-content-center">
+    <div class='col-md-6'>
+        <h2 class="mt-5">{{ room }} -DjChat</h2>
+        <div class="container py-4"></div>
+            
+            <div id="display">
+                <p></p>
+                <!-- <div class="bg-secondary p-4 bg-opacity-10 rounded">
+                    <div class="bg-secondary p-3 bg-opacity-25 rounded">
+                        Neha<br>
+                        hi!<br>
+                        time
+                    </div>
+                </div> -->
+               
+            </div>
+        
+
+            <script>
+                $(document).ready(function(){
+
+                    setInterval(function(){
+                        $.ajax({
+                            type: 'GET',
+                            url: "/getMessages/{{room}}",
+                            success: function(response){
+                                console.log(response);
+                                $("#display").empty();
+                                for (var key in response.messages)
+                                {
+                                    var temp="<div class='bg-secondary p-4 bg-opacity-10 rounded'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span>"+response.messages[key].date+"</span></div>";
+                                    $("#display").append(temp);
+                                }
+                            },
+                            error: function(response){
+                                alert('An error occured')
+                            }
+                        })
+                    },1000);
+                })
+                </script>
+            
+
+            <p></p>
+            <div class="bg-secondary p-5 bg-opacity-10 rounded">
+                <div class="mb-3"> 
+                    <form id="post-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="username" id="username" value={{username}}>
+                        <input type="hidden" name="room_id" id="room_id" value={{room_details.id}}>
+                        <input type="text" class="form-control" id="message" name="message"><p></p>
+                        <!-- <button type="button" id="bt" onclick="myFunction()" class="btn btn-success">Send</button> -->
+                        <button id="bt" class="btn btn-success" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    console.log("welcome!");
+    console.log(document.getElementById("username").value);
+    console.log(document.getElementById("room_id").value);
+   
+
+
+    $(document).on('click','#bt',function(e){
+        e.preventDefault();
+        console.log("You clicked on Send btn");
+        console.log(document.querySelector("#message").value);
+        $.ajax({
+            type: 'POST',
+            url: '/send',
+            data:{
+                username: $('#username').val(),
+                room_id: $('#room_id').val(),
+                message: $('#message').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+           
+            success:function(data){
+                console.log(data);
+            }
+            })
+            {% comment %} <!-- document.getElementById('message').value = ''  --> {% endcomment %}
+        })
+
+        
+    
+
+</script>
+
+{% endblock content %}
+
+
